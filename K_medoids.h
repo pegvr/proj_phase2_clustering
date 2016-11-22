@@ -1,4 +1,3 @@
-
 #ifndef K_MEDOIDS_H
 #define	K_MEDOIDS_H
 #include "Cluster.h"

@@ -1,7 +1,5 @@
 #include "K_medoids.h"
 
-
-
 void k_medoidspp(Cluster **cluster, int k, int N, string method, Hamming **hamming, CosineSim **cosine,Euclidean **euclidean, DistanceMatrix *distance)
 {
     int sum = 0, r = 0, dist, j; 

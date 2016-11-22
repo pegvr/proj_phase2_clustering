@@ -1,5 +1,6 @@
 #include "Park_Jun.h"
 
+
 void ParkJun(Cluster **cluster, int k, int N, string method, Hamming **hamming, CosineSim **cosine,Euclidean **euclidean, DistanceMatrix *distance)
 {
     int i, j, t, dist, sum[N], sumt, matrix[N][N];

@@ -1,10 +1,3 @@
-/* 
- * File:   Park_Jun.h
- * Author: angelique
- *
- * Created on November 21, 2016, 8:26 PM
- */
-
 #ifndef PARK_JUN_H
 #define	PARK_JUN_H
 #include "Cluster.h"

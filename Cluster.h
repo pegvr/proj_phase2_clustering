@@ -1,5 +1,3 @@
-
-
 #ifndef CLUSTER_H
 #define	CLUSTER_H
 #include <vector>

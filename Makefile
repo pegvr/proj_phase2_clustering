@@ -81,8 +81,8 @@ clobber: .clobber-post
 
 
 # all
-all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o
-	g++ -g main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o -o medoids -lm
+all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o 
+	g++ -g main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o -o medoids -lm
 
 main.o: main.cpp DataPoints.h
 	g++ -std=c++0x -c -g main.cpp
@@ -122,6 +122,9 @@ K_medoids.o: K_medoids.cpp K_medoids.h
 
 Park_Jun.o: Park_Jun.cpp Park_Jun.h
 	g++ -std=c++0x -c -g Park_Jun.cpp
+
+PAM.o: PAM.cpp PAM.h
+	g++ -std=c++0x -c -g PAM.cpp
 	
 clean:
 	rm -f *.o lsh

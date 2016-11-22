@@ -1,38 +1,33 @@
-#include "K_medoids.h"
+#include "PAM.h"
+#include "Cluster.h"
 
-void k_medoidspp(Cluster **cluster, int k, int N, string method, Hamming **hamming, CosineSim **cosine,Euclidean **euclidean, DistanceMatrix *distance)
+
+ 
+void PAM(Cluster **cluster, int k, int N, string method, Hamming **hamming, CosineSim **cosine,Euclidean **euclidean, DistanceMatrix *distance, int *objectivefunction, float * ObjectiveFunctionF)
 {
-    int sum = 0, r = 0, dist, j; 
-    float P[N];
-    int rand_num = (rand() / (RAND_MAX + 1.0))* N; 
-    if (method == "@metric_space hamming")
-        cluster[0] = new ClusterH(hamming[rand_num]);
-    else if (method == "@metric euclidean")
-        cluster[0] = new ClusterE(euclidean[rand_num]);
-    else if (method == "@metric cosine")
-        cluster[0] = new ClusterC(cosine[rand_num]);
-    else
-        cluster[0] = new ClusterD(distance->getRow(rand_num)); 
-    //cout <<"1   " << endl;
-    for( int i = 0; i < k-1; i++) //for every cluster
+    int i, j, dist, min_dist, min_k;
+    float distf;
+    for (i = 0; i < N; i++)
     {
-        //cout <<"2" << endl;
-        for ( j = 0; j < N; j++)         //for every point
+        min_dist = 100000;
+        for (j = 0; j < k; j++)
         {
-            
             if (method == "@metric_space hamming")
             {
                 dist = 0;
-                string temp1 = cluster[i]->getCentroid();
-                string temp2 = hamming[j]->getId();
+                
+                string temp1 = cluster[j]->getCentroid();
+                string temp2 = hamming[i]->getId();
                 for (int z = 0; z < hamming[i]->getId().size() ; z++)          //Find how many bits are different
-                    if ( temp1[z] != temp2[z] ) dist++;               
-                //cout <<"3" << endl;
+                    if (temp1[z] != temp2[z]) dist++;               
+                cout <<"3   " << dist<< endl;
+                //cout << (cluster[j]->getCentroid()
+                                             
             }                
             else if (method == "@metric euclidean")
             {
                 int num = 0, sum = 0;
-                string temp2 = euclidean[j]->getId(), h;
+                string temp2 = euclidean[i]->getId(), h;
                 for(int t = 0; t < temp2.length(); t++)                     //Count how many dimensions the point has
                 {
                     h = temp2[t];
@@ -49,7 +44,7 @@ void k_medoidspp(Cluster **cluster, int k, int N, string method, Hamming **hammi
                // cout <<"5" << endl;
                 double array2[num + 1];                         //Array to store each distance of query point
                // cout <<"55" << endl;
-                istringstream iss2(cluster[i]->getCentroid());
+                istringstream iss2(cluster[j]->getCentroid());
               //  cout <<"555" << endl;
                 for (auto& t : array2)                          //For every distance, store it
                 {
@@ -58,13 +53,13 @@ void k_medoidspp(Cluster **cluster, int k, int N, string method, Hamming **hammi
                 //cout <<"6" << endl;
                 for (int i = 0; i < num + 1 ; i++)              //Calculate "almost" euclidean distance 
                     sum += (array1[i] - array2[i]) * ((array1[i] - array2[i]));
-                dist = sqrt(sum);
-               // cout << "mpeka" << endl;
+                distf = sqrt(sum);
+                cout << "mpeka" << endl;
             }
             else if (method == "@metric cosine")
             {
                 int num = 0, norma1 = 0, norma2 = 0, inner_product = 0;
-                string temp2 = cosine[j]->getId(), h;
+                string temp2 = cosine[i]->getId(), h;
                 for(int t = 0; t < temp2.length(); t++)                     //Count how many dimensions the point has
                 {
                     h = temp2[t];
@@ -80,7 +75,7 @@ void k_medoidspp(Cluster **cluster, int k, int N, string method, Hamming **hammi
                     norma1 += array1[t] * array1[t];           //norma of bucket point
                 norma1 = sqrt(norma1);
                 double array2[num + 1];                         //Array to store each dimension of query point
-                istringstream iss2(cluster[i]->getCentroid());
+                istringstream iss2(cluster[j]->getCentroid());
                 for (auto& i : array2)                          //For every dimension, store it
                 {
                     iss2>> i;
@@ -93,34 +88,33 @@ void k_medoidspp(Cluster **cluster, int k, int N, string method, Hamming **hammi
                 dist = 1 - (inner_product / (norma1 * norma2));
             }
             else
-            {                
-                if (j < N-2)
-                {
-                    int *row = distance->getRow(j);
-                    dist = row[r];
-                    cout << dist << endl;
-                }
+            {   
+                int *row = distance->getRow(j);
+                dist = row[j];
             }  
-            //cout <<"7" << endl;
-            sum += dist;
-            P[j] = sum;
-            //cout <<"8" << endl;
+            cout << "1" << endl;
+            if (dist < min_dist && dist != 0)
+            {
+                min_dist = dist;
+                min_k = j;
+            }  
+            objectivefunction[j] += dist;
+            ObjectiveFunctionF[j] += distf;
+            cout <<"8" << endl;
         }
-        float x = (rand() / (RAND_MAX + 1.0))* P[j-1];
-        //cout <<"9" << endl;
-        for (int j = 0; j < N; j++)         //for every point
-            if (x < P[j])   r = j;
-        //cout <<"10  " << r << endl;
+        cout <<"8   " << min_k << "     " << min_dist << endl;
         if (method == "@metric_space hamming")
-            cluster[i+1] = new ClusterH(hamming[r]);
+            cluster[min_k]->InsertPointH(hamming[i], min_dist);
         else if (method == "@metric euclidean")
-            cluster[i+1] = new ClusterE(euclidean[r]);
+            cluster[min_k]->InsertPointE(euclidean[i], min_dist);
         else if (method == "@metric cosine")
-            cluster[i+1] = new ClusterC(cosine[r]);
+            cluster[min_k]->InsertPointC(cosine[i], min_dist);
         else
-            cluster[i+1] = new ClusterD(distance->getRow(r));  
-        //cout <<"11   " << cluster[i+1]->getCentroid() << endl;
+           cluster[min_k]->InsertPointD(distance->getRow(i), min_dist);
+        cout << "objective  " << j << "     " << ObjectiveFunctionF[j] << endl;
     }
-    
-   
+    cout <<"!!!!!!!!!!" << endl;
+    cluster[0]->PrintCluster();
+    cluster[1]->PrintCluster();
+    cout <<"telos" << endl;
 }

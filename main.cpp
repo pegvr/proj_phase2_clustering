@@ -8,6 +8,7 @@
 #include "Cluster.h"
 #include "K_medoids.h"
 #include "Park_Jun.h"
+#include "PAM.h"
 
 using namespace std;
 
@@ -76,6 +77,9 @@ int main(int argc, char** argv)
        distancematrix = CreateMatrixPoints(N-1, argv[2], NumofHashFUnctions);
     
     Cluster **cluster = new Cluster*[k];
+    int ObjectiveFunction[k];
+    float ObjectiveFunctionF[k];
+    
     srand(time(0));
     while (gameOn != false)
     {
@@ -100,18 +104,30 @@ int main(int argc, char** argv)
             // K-medoids++
 
                 k_medoidspp( cluster, k, N, method, hamming, cosine, euclidean, distancematrix);
-                //for (i = 0; i < k; i++) cout << cluster[i]->getCentroidD() << endl;
+                for (i = 0; i < k; i++) cout << cluster[i]->getCentroid() << endl;
                 
             break;
             case 2:
             // Concentrate (Park-Jun)
                 ParkJun( cluster, k, N, method, hamming, cosine, euclidean, distancematrix);
-                //  for (i = 0; i < k; i++) cout << cluster[i]->getCentroid() << endl;
+                for (i = 0; i < k; i++) cout << cluster[i]->getCentroid() << endl;
             break;
             case 3:
             // PAM assignment (simplest approach)
+                for (i = 0; i < k; i++) ObjectiveFunction[i] = 0;
+                for (i = 0; i < k; i++) ObjectiveFunctionF[i] = 0;
+                if(method == "@metric_space hamming" || method == "@metric_space matrix" || method == "@metric cosine")                    
+                {
+                    PAM(cluster, k, N, method, hamming, cosine, euclidean, distancematrix, ObjectiveFunction, ObjectiveFunctionF);
+                    for (i = 0; i < k; i++) cout << ObjectiveFunction[i] << endl;
+                }
+                else
+                {
+                    PAM(cluster, k, N, method, hamming, cosine, euclidean, distancematrix, ObjectiveFunction, ObjectiveFunctionF);
+                    for (i = 0; i < k; i++) cout << ObjectiveFunctionF[i] << endl;
+                }
                 
-            break;
+                break;
             case 4:
             //Assignment by LSH/DBH: Reverse Approach
                 
@@ -147,7 +163,5 @@ int main(int argc, char** argv)
     
     return 0;
 }
-
-
 
 //DataHamming_5_1000x64.csv

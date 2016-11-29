@@ -81,8 +81,8 @@ clobber: .clobber-post
 
 
 # all
-all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o Distances.o alaLloyds.o Clarans.o LSH.o
-	g++ -g main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o Distances.o alaLloyds.o Clarans.o LSH.o -o medoids -lm
+all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o Distances.o alaLloyds.o Clarans.o LSH.o CLARA.o Silhouette.o
+	g++ -g main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o Distances.o alaLloyds.o Clarans.o LSH.o CLARA.o Silhouette.o -o medoids -lm
 
 main.o: main.cpp DataPoints.h
 	g++ -std=c++0x -c -g main.cpp
@@ -137,6 +137,13 @@ Clarans.o:Clarans.cpp Clarans.h
 	
 LSH.o: LSH.cpp LSH.h
 	g++ -std=c++0x -c -g LSH.cpp
+
+CLARA.o: CLARA.cpp CLARA.h
+	g++ -std=c++0x -c -g CLARA.cpp
+	
+Silhouette.o:Silhouette.cpp Silhouette.h
+	g++ -std=c++0x -c -g Silhouette.cpp
+
 	
 clean:
 	rm -f *.o lsh

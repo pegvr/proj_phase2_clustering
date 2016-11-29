@@ -81,17 +81,17 @@ clobber: .clobber-post
 
 
 # all
-all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o 
-	g++ -g main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o -o medoids -lm
+all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o Distances.o alaLloyds.o Clarans.o LSH.o
+	g++ -g main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceMatrix.o randomfunc.o NeighbourSearch.o DataPoints.o Cluster.o K_medoids.o Park_Jun.o PAM.o Distances.o alaLloyds.o Clarans.o LSH.o -o medoids -lm
 
 main.o: main.cpp DataPoints.h
 	g++ -std=c++0x -c -g main.cpp
 
-LinkedList.o:../proj1.3/LinkedList.cpp ../proj1.3/LinkedList.h
+LinkedList.o:../CppApplication_10/LinkedList.cpp ../proj1.3/LinkedList.h
 	g++ -std=c++0x -c -g ../proj1.3/LinkedList.cpp
 
 Hashtable.o: ../proj1.3/Hashtable.cpp ../proj1.3/LinkedList.h ../proj1.3/Hashtable.h
-	g++ -c -g ../proj1.3/Hashtable.cpp 
+	g++ -std=c++0x -c -g ../CppApplication_10/Hashtable.cpp 
 
 Hamming.o: ../proj1.3/Hamming.cpp ../proj1.3/Hamming.h
 	g++ -c -g ../proj1.3/Hamming.cpp
@@ -109,22 +109,34 @@ randomfunc.o: ../proj1.3/randomfunc.cpp ../proj1.3/randomfunc.h
 	g++ -c -g ../proj1.3/randomfunc.cpp
 	
 NeighbourSearch.o: ../proj1.3/NeighbourSearch.cpp ../proj1.3/NeighbourSearch.h ../proj1.3/Hashtable.h 
-	g++ -c -g ../proj1.3/NeighbourSearch.cpp
+	g++ -std=c++0x -c -g ../proj1.3/NeighbourSearch.cpp
 	
 DataPoints.o: DataPoints.cpp DataPoints.h 
 	g++ -c -g DataPoints.cpp
 
 Cluster.o: Cluster.cpp Cluster.h
-	g++ -c -g Cluster.cpp
+	g++ -std=c++0x -c -g Cluster.cpp
 	
 K_medoids.o: K_medoids.cpp K_medoids.h
 	g++ -std=c++0x -c -g K_medoids.cpp
 
 Park_Jun.o: Park_Jun.cpp Park_Jun.h
 	g++ -std=c++0x -c -g Park_Jun.cpp
-
+	
 PAM.o: PAM.cpp PAM.h
 	g++ -std=c++0x -c -g PAM.cpp
+	
+Distances.o: Distances.cpp Distances.h
+	g++ -std=c++0x -c -g Distances.cpp
+	
+alaLloyds.o: alaLloyds.cpp alaLloyds.h
+	g++ -std=c++0x -c -g alaLloyds.cpp
+	
+Clarans.o:Clarans.cpp Clarans.h
+	g++ -std=c++0x -c -g Clarans.cpp
+	
+LSH.o: LSH.cpp LSH.h
+	g++ -std=c++0x -c -g LSH.cpp
 	
 clean:
 	rm -f *.o lsh

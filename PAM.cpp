@@ -6,115 +6,251 @@
 void PAM(Cluster **cluster, int k, int N, string method, Hamming **hamming, CosineSim **cosine,Euclidean **euclidean, DistanceMatrix *distance, int *objectivefunction, float * ObjectiveFunctionF)
 {
     int i, j, dist, min_dist, min_k;
-    float distf;
-    for (i = 0; i < N; i++)
+    float distf, min_distf;
+    for (i = 0; i < N; i++)             //For every point
     {
         min_dist = 100000;
-        for (j = 0; j < k; j++)
+        min_distf = 10000.0;
+        for (j = 0; j < k; j++)         //For every cluster compute nearest centroid from point
         {
             if (method == "@metric_space hamming")
             {
-                dist = 0;
-                
-                string temp1 = cluster[j]->getCentroid();
-                string temp2 = hamming[i]->getId();
-                for (int z = 0; z < hamming[i]->getId().size() ; z++)          //Find how many bits are different
-                    if (temp1[z] != temp2[z]) dist++;               
-                cout <<"3   " << dist<< endl;
-                //cout << (cluster[j]->getCentroid()
+                dist = DistanceHamming(cluster[j]->getCentroid(), hamming[i]->getId());
                                              
             }                
             else if (method == "@metric euclidean")
             {
-                int num = 0, sum = 0;
-                string temp2 = euclidean[i]->getId(), h;
-                for(int t = 0; t < temp2.length(); t++)                     //Count how many dimensions the point has
-                {
-                    h = temp2[t];
-                    if(h == "\t")   num++;
-                }
-                //cout <<"3" << endl;
-                double array1[num + 1];                         //Array to store each distance of bucket point
-                istringstream iss(temp2);
-               // cout <<"4" << endl;
-                for (auto& t : array1)                          //For every distance, store it
-                {
-                    iss >> t;
-                }
-               // cout <<"5" << endl;
-                double array2[num + 1];                         //Array to store each distance of query point
-               // cout <<"55" << endl;
-                istringstream iss2(cluster[j]->getCentroid());
-              //  cout <<"555" << endl;
-                for (auto& t : array2)                          //For every distance, store it
-                {
-                    iss2 >> t;
-                }
-                //cout <<"6" << endl;
-                for (int i = 0; i < num + 1 ; i++)              //Calculate "almost" euclidean distance 
-                    sum += (array1[i] - array2[i]) * ((array1[i] - array2[i]));
-                distf = sqrt(sum);
-                cout << "mpeka" << endl;
+                distf = DistanceEuclidean(euclidean[i]->getId(), cluster[j]->getCentroid());
             }
             else if (method == "@metric cosine")
             {
-                int num = 0, norma1 = 0, norma2 = 0, inner_product = 0;
-                string temp2 = cosine[i]->getId(), h;
-                for(int t = 0; t < temp2.length(); t++)                     //Count how many dimensions the point has
-                {
-                    h = temp2[t];
-                    if(h == "\t")   num++;
-                }
-                double array1[num + 1];                         //Array to store each dimension of bucket point
-                istringstream iss(temp2);
-                for (auto& t : array1)                          //For every dimension, store it
-                {
-                    iss>> t;
-                }
-                for(int t = 0; t < num + 1; t++)
-                    norma1 += array1[t] * array1[t];           //norma of bucket point
-                norma1 = sqrt(norma1);
-                double array2[num + 1];                         //Array to store each dimension of query point
-                istringstream iss2(cluster[j]->getCentroid());
-                for (auto& i : array2)                          //For every dimension, store it
-                {
-                    iss2>> i;
-                }
-                for(i = 0; i < num + 1; i++)
-                    norma2 += array2[i] * array2[i];        //norma of query point
-                norma2 = sqrt(norma2); 
-                for(i = 0; i < num + 1; i++)
-                    inner_product += array1[i] * array2[i];          //inner product of query and bucket point
-                dist = 1 - (inner_product / (norma1 * norma2));
+
+                distf = DistanceEuclidean(cosine[i]->getId(), cluster[j]->getCentroid());
             }
             else
             {   
                 int *row = distance->getRow(j);
                 dist = row[j];
             }  
-            cout << "1" << endl;
-            if (dist < min_dist && dist != 0)
+            if ((dist < min_dist && dist != 0) || (distf < min_distf && distf != 0))    
             {
                 min_dist = dist;
+                min_distf = distf;
                 min_k = j;
             }  
-            objectivefunction[j] += dist;
-            ObjectiveFunctionF[j] += distf;
-            cout <<"8" << endl;
         }
-        cout <<"8   " << min_k << "     " << min_dist << endl;
+        objectivefunction[min_k] += dist;
+        ObjectiveFunctionF[min_k] += distf;
+        
         if (method == "@metric_space hamming")
-            cluster[min_k]->InsertPointH(hamming[i], min_dist);
-        else if (method == "@metric euclidean")
-            cluster[min_k]->InsertPointE(euclidean[i], min_dist);
+        {
+            cluster[min_k]->InsertPointH(hamming[i], min_dist); //Insert point into nearest cluster
+            min_dist = 10000;
+            int sc;
+            for (int p = 0; p < k; p++)     //Find second best cluster
+            {
+                if (p != min_k)
+                {
+
+                    dist = DistanceHamming(cluster[p]->getCentroid(), hamming[i]->getId());
+                    if (dist < min_dist && dist != 0)
+                    {
+                        min_dist = dist;
+                        sc = p;
+                    }  
+                }
+            }
+            cluster[min_k]->SecondCentroid(sc, min_dist);
+        }            
+        else if (method == "@metric euclidean") 
+        {
+            cluster[min_k]->InsertPointE(euclidean[i], min_dist);   //Insert point into nearest cluster
+            min_distf = 10000.0;
+            int sc;
+            for (int p = 0; p < k; p++)    //Find second best cluster
+            {
+                if (p != min_k)
+                {
+                    distf = DistanceEuclidean(euclidean[i]->getId(), cluster[p]->getCentroid());
+                    if (distf < min_distf && distf != 0)
+                    {
+                        min_distf = distf;
+                        sc = p;
+                    }  
+                }
+            }
+            cluster[min_k]->SecondCentroid(sc, min_distf);
+        }
         else if (method == "@metric cosine")
-            cluster[min_k]->InsertPointC(cosine[i], min_dist);
+        {
+            cluster[min_k]->InsertPointC(cosine[i], min_distf);  //Insert point into nearest cluster
+            min_distf = 10000.0;
+            int sc;
+            for (int p = 0; p < k; p++)    //Find second best cluster
+            {
+                if (p != min_k)
+                {
+                    distf = DistanceEuclidean(cosine[i]->getId(), cluster[p]->getCentroid());
+                    if (distf < min_distf && distf != 0)
+                    {
+                        min_distf = distf;
+                        sc = p;
+                    }  
+                }
+            }
+            cluster[min_k]->SecondCentroid(sc, min_distf);
+        }
         else
+        {
            cluster[min_k]->InsertPointD(distance->getRow(i), min_dist);
-        cout << "objective  " << j << "     " << ObjectiveFunctionF[j] << endl;
+           if(j != min_k){
+                int *row = distance->getRow(j);
+                dist = row[j];
+           }
+           cluster[min_k]->SecondCentroid(j, dist);
+        }
+
     }
-    cout <<"!!!!!!!!!!" << endl;
-    cluster[0]->PrintCluster();
-    cluster[1]->PrintCluster();
-    cout <<"telos" << endl;
+
+}
+
+
+void PAM_Update(Cluster **cluster, int k, int N, string method, Hamming **hamming, CosineSim **cosine,Euclidean **euclidean, DistanceMatrix *distance, int *objectivefunction, float * ObjectiveFunctionF)
+{
+    int i, j, dist, min_dist, min_k, flag, position;
+    float distf, min_distf;
+    for (i = 0; i < N; i++)   //For every point
+    {
+        min_dist = 100000;
+        min_distf = 100000.0;
+        for (j = 0; j < k; j++)         //For every cluster
+        {
+            if (method == "@metric_space hamming")  //Compute distance point-cluster
+            {
+                dist = DistanceHamming(cluster[j]->getCentroid(), hamming[i]->getId());
+                for (int t = 0; t < cluster[j]->GetSize(); t++)     //Check where point already belongs
+                {
+                    if (hamming[i]->getId() == cluster[j]->GetPointH(t)->getId())
+                    {
+                        flag = j;               //Cluster where point belongs
+                        position = t;           //Position in cluster where point belongs
+                        break;
+                    }                
+                }                                            
+            }                
+            else if (method == "@metric euclidean")
+            {
+                distf = DistanceEuclidean(euclidean[i]->getId(), cluster[j]->getCentroid());
+                for (int t = 0; t < cluster[j]->GetSize(); t++)  //Check where point already belongs
+                {
+                    if (euclidean[i]->getId() == cluster[j]->GetPointE(t)->getId())
+                    {
+                        flag = j;           //Cluster where point belongs
+                        position = t;           //Position in cluster where point belongs
+                        break;
+                    }                
+                }
+            }
+            else if (method == "@metric cosine")
+            {
+                distf = DistanceEuclidean(cosine[i]->getId(), cluster[j]->getCentroid()); 
+                for (int t = 0; t < cluster[j]->GetSize(); t++)   //Check where point already belongs
+                {
+                    if (cosine[i]->getId() == cluster[j]->GetPointC(t)->getId())
+                    {
+                        flag = j;                //Cluster where point belongs
+                        position = t;           //Position in cluster where point belongs
+                        break;
+                    }                
+                }
+            }
+            else
+            {   
+                int *row = distance->getRow(i);
+                dist = row[j];
+            }  
+            if ((dist < min_dist && dist != 0) || (distf < min_distf && distf != 0))       
+            {
+                min_dist = dist;
+                min_distf = distf;
+                min_k = j;
+            }  
+            
+        }
+        objectivefunction[min_k] += dist;
+        ObjectiveFunctionF[min_k] += distf;
+        if (min_k != flag)                         //If point needs to be assigned again to another cluster
+        { 
+            cluster[flag]->PopPoint(position);     //Pop point from cluster
+            cluster[flag]->PopSecondCentroid(position);
+            /*Insert now point into the right cluster, after the update of the centroid*/
+            if (method == "@metric_space hamming")  
+            {
+                cluster[min_k]->InsertPointH(hamming[i], min_dist);
+                min_dist = 10000;
+                int sc;
+                for (int p = 0; p < k; p++)
+                {
+                    if (p != min_k)
+                    {
+
+                        dist = DistanceHamming(cluster[p]->getCentroid(), hamming[i]->getId());
+                        if (dist < min_dist && dist != 0)
+                        {
+                            min_dist = dist;
+                            sc = p;
+                        }  
+                    }
+                }
+                cluster[min_k]->SecondCentroid(sc, min_dist);
+            }            
+            else if (method == "@metric euclidean")
+            {
+                cluster[min_k]->InsertPointE(euclidean[i], min_dist);
+                min_distf = 10000.0;
+                int sc;
+                for (int p = 0; p < k; p++)
+                {
+                    if (p != min_k)
+                    {
+                        distf = DistanceEuclidean(euclidean[i]->getId(), cluster[p]->getCentroid());
+                        if (distf < min_distf && distf != 0)
+                        {
+                            min_distf = distf;
+                            sc = p;
+                        }  
+                    }
+                }
+                cluster[min_k]->SecondCentroid(sc, min_distf);
+            }
+            else if (method == "@metric cosine")
+            {
+                cluster[min_k]->InsertPointC(cosine[i], min_dist);
+                min_distf = 10000.0;
+                int sc;
+                for (int p = 0; p < k; p++)
+                {
+                    if (p != min_k)
+                    {
+                        distf = DistanceEuclidean(cosine[i]->getId(), cluster[p]->getCentroid());
+                        if (distf < min_distf && distf != 0)
+                        {
+                            min_distf = distf;
+                            sc = p;
+                        }  
+                    }
+                }
+                cluster[min_k]->SecondCentroid(sc, min_distf);
+            }
+            else
+            {
+               cluster[min_k]->InsertPointD(distance->getRow(i), min_dist);
+               if(j != min_k){
+                    int *row = distance->getRow(j);
+                    dist = row[j];
+               }
+               cluster[min_k]->SecondCentroid(j, dist);
+            }
+        }
+    }
 }

@@ -20,11 +20,25 @@ public:
     virtual void InsertPointC(CosineSim *point, int dist){};
     virtual void InsertPointD(int *point, int dist){};
     virtual void InsertPointH(Hamming *point, int dist){};
+    void SecondCentroid(int p, int dist){secondcentroid.push_back(p); secondcentroiddist.push_back(dist);};
+    virtual Hamming * GetPointH(int i){};
+    virtual Euclidean * GetPointE(int i){};
+    virtual CosineSim * GetPointC(int i){};
+    virtual int * GetPointD(int i){};
+    void UpdateCentroid(string ce){centroid = ce;};
+    int GetSize(){return secondcentroid.size();};
+    int GetSecondCentroidDistance(int i){return secondcentroiddist[i];};
+    int GetSecondCentroid(int i){return secondcentroid[i];};
     virtual void PrintCluster();
+    virtual void PopPoint(int i){};
+    void PopSecondCentroid(int i);
+    void UpdateDistanceM(int *matrix);
+    virtual void UpdateDistanceCentroidH(int * matrix, int size){};
     virtual ~Cluster();
 private:   
     string centroid;
-    //vector <> points;
+    vector <int> secondcentroid;
+    vector <int> secondcentroiddist;
 };
 
 class ClusterH : public Cluster{
@@ -34,11 +48,19 @@ public:
     string getCentroid() {return centroid;} ;
     void InsertPointH(Hamming *point, int dist);
     void PrintCluster();
-    virtual ~ClusterH(){};
+    Hamming * GetPointH(int i){return points[i];};
+    void PopPoint(int i);
+    void UpdateDistanceCentroidH(int * matrix, int size);
+    virtual ~ClusterH(){        
+        for (auto it = points.begin(); it != points.end(); ++it){
+        delete *it;
+        }
+    };
 private:
     string centroid;
     vector <Hamming *> points;
     vector <int> distance;
+    
 };
 
 class ClusterE : public Cluster{
@@ -48,7 +70,12 @@ public:
     string getCentroid() {return centroid;} ;
     void InsertPointE(Euclidean *point, int dist);
     void PrintCluster();
-    virtual ~ClusterE(){};
+    Euclidean * GetPointE(int i){return points[i];};
+    void PopPoint(int i);
+    virtual ~ClusterE(){ 
+        for (auto it = points.begin(); it != points.end(); ++it){
+        delete *it;
+    }};
 private:
     string centroid;
     vector <Euclidean*> points;
@@ -62,7 +89,12 @@ public:
     string getCentroid() {return centroid;} ;
     void InsertPointC(CosineSim *point, int dist);
     void PrintCluster();
-    virtual ~ClusterC(){};
+    CosineSim * GetPointC(int i){return points[i];};
+    void PopPoint(int i);
+    virtual ~ClusterC(){ 
+        for (auto it = points.begin(); it != points.end(); ++it){
+        delete *it;
+    }};
 private:
     string centroid;
     vector <CosineSim*> points;
@@ -76,10 +108,16 @@ public:
     int * getCentroidD() {return centroid;} ;
     void InsertPointD(int *point, int dist);
     void PrintCluster();
-    virtual ~ClusterD(){};
+    int * GetPointD(int i){return points[i];};
+    void PopPoint(int *row);
+    virtual ~ClusterD(){ 
+        for (auto it = points.begin(); it != points.end(); ++it){
+        delete *it;
+    }};
 private:
     int * centroid;
-    vector <int*> points;
+    vector <int *> points;
 };
 
 #endif	/* CLUSTER_H */
+

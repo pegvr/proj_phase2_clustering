@@ -42,7 +42,6 @@ void ClusterH :: InsertPointH(Hamming *point, int dist)
 {
     points.push_back(point);
     distance.push_back(dist);
-    
 }
 
 void ClusterE :: InsertPointE(Euclidean *point, int dist)
@@ -59,7 +58,7 @@ void ClusterC :: InsertPointC(CosineSim *point, int dist)
 
 void ClusterD::InsertPointD(int* point, int dist)
 {
-    points.push_back(point);
+   points.push_back(point);
 }
 
 void Cluster:: PrintCluster()
@@ -69,11 +68,11 @@ void Cluster:: PrintCluster()
 
 void ClusterH:: PrintCluster()
 {
-    cout << "point  " << points.size() << endl;
-    /*for(int i = 0; i < points.size(); i++)
+    //cout << "size =  " << points.size() << endl;
+    for(int i = 0; i < points.size(); i++)
     {
         cout << "point  " << i << " =    " << points[i]->getId() << endl;
-    }*/
+    }
 }
 
 void ClusterC:: PrintCluster()
@@ -98,5 +97,58 @@ void ClusterE:: PrintCluster()
     {
         cout << "point  " << i << " =    " << points[i]->getId() << endl;
     }
+}
+
+void Cluster::UpdateDistanceM(int* matrix)
+{
+    int j = 0;
+    for (int i = 0; i < secondcentroiddist.size(); i++)
+    {
+        if (matrix[i] != 0)
+        {
+            secondcentroiddist[j] = matrix[i];
+            j++;
+        }
+        
+    }
+}
+
+void ClusterH::UpdateDistanceCentroidH(int* matrix, int size)
+{
+    int j = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (matrix[i] != 0 && j < distance.size())
+        {
+            distance[j] = matrix[i];
+            j++;
+        }
+        
+    }
+}
+
+void Cluster::PopSecondCentroid(int i)
+{
+    secondcentroid.erase(secondcentroid.begin()+(i-1));
+    secondcentroiddist.erase(secondcentroiddist.begin()+(i-1));
+}
+
+void ClusterH::PopPoint(int i)
+{
+    points.erase(points.begin()+i);
+    distance.erase(distance.begin()+i);
+}
+
+void ClusterE::PopPoint(int i)
+{
+    points.erase(points.begin()+i);
+    distance.erase(distance.begin()+i);
+    
+}
+
+void ClusterC::PopPoint(int i)
+{
+    points.erase(points.begin()+i);
+    distance.erase(distance.begin()+i);
 }
 

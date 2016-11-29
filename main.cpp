@@ -122,7 +122,9 @@ int main(int argc, char** argv)
             case 2:
             // Concentrate (Park-Jun)
                 outputFile << "Algorithm: I2" ;
+                cout << "lala" << endl;
                 ParkJun( cluster, k, N, method, hamming, cosine, euclidean, distancematrix);
+                cout << "lala2" << endl;
                 //for (i = 0; i < k; i++) cout << cluster[i]->getCentroid() << endl;
             break;
             case 3:
@@ -164,13 +166,15 @@ int main(int argc, char** argv)
             case 7:
             //CLARANS Update
                 outputFile << "A2U2" << endl;
-                Clarans(cluster, k, N, method, hamming, cosine, euclidean, distancematrix, ObjectiveFunction, ObjectiveFunctionF, Q, 7, NumofHashFUnctions,  L);
+                Clarans(cluster, k, N, method, hamming, cosine, euclidean, distancematrix, ObjectiveFunction, ObjectiveFunctionF, Q, 6, NumofHashFUnctions,  L);
                 gameOn = false;     
             break;
             case 8:
             //CLARA 
                 outputFile << "CLARA" << endl;
+                cout << "ys" << endl ;
                 CLARA(cluster,  k,  N,  method, hamming, cosine,euclidean,  distancematrix, ObjectiveFunction, ObjectiveFunctionF);
+                cout << "ys2" << endl ;
                 gameOn = false;     
             break;
             default:

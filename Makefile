@@ -87,11 +87,11 @@ all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceM
 main.o: main.cpp DataPoints.h
 	g++ -std=c++0x -c -g main.cpp
 
-LinkedList.o:../CppApplication_10/LinkedList.cpp ../proj1.3/LinkedList.h
+LinkedList.o:../proj1.3/LinkedList.cpp ../proj1.3/LinkedList.h
 	g++ -std=c++0x -c -g ../proj1.3/LinkedList.cpp
 
 Hashtable.o: ../proj1.3/Hashtable.cpp ../proj1.3/LinkedList.h ../proj1.3/Hashtable.h
-	g++ -std=c++0x -c -g ../CppApplication_10/Hashtable.cpp 
+	g++ -std=c++0x -c -g ../proj1.3/Hashtable.cpp 
 
 Hamming.o: ../proj1.3/Hamming.cpp ../proj1.3/Hamming.h
 	g++ -c -g ../proj1.3/Hamming.cpp

@@ -15,6 +15,7 @@
 #include "CLARA.h"
 #include "Silhouette.h"
 
+
 using namespace std;
 
 /*DataHamming_5_1000x64.csv
@@ -122,9 +123,9 @@ int main(int argc, char** argv)
             case 2:
             // Concentrate (Park-Jun)
                 outputFile << "Algorithm: I2" ;
-                cout << "lala" << endl;
+                //cout << "lala" << endl;
                 ParkJun( cluster, k, N, method, hamming, cosine, euclidean, distancematrix);
-                cout << "lala2" << endl;
+                //cout << "lala2" << endl;
                 //for (i = 0; i < k; i++) cout << cluster[i]->getCentroid() << endl;
             break;
             case 3:
@@ -147,6 +148,7 @@ int main(int argc, char** argv)
             case 4:
             //Assignment by LSH/DBH: Reverse Approach
                 outputFile << "A2" ;
+                cout << "lalallalalala" << endl; 
                 LSH(cluster,  k,  N,  method, hamming, cosine, euclidean, distancematrix,  NumofHashFUnctions,  L, 4);
 
             break;
@@ -172,9 +174,9 @@ int main(int argc, char** argv)
             case 8:
             //CLARA 
                 outputFile << "CLARA" << endl;
-                cout << "ys" << endl ;
+                //cout << "ys" << endl ;
                 CLARA(cluster,  k,  N,  method, hamming, cosine,euclidean,  distancematrix, ObjectiveFunction, ObjectiveFunctionF);
-                cout << "ys2" << endl ;
+                //cout << "ys2" << endl ;
                 gameOn = false;     
             break;
             default:

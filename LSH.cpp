@@ -8,7 +8,7 @@
 
 
 Hashtable ** CreateHash(int L, int k, int tablesize);
-void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int k, string method, int counter);
+void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int k, string method, int counter,int NumofHashFUnctions);
 
 Hashtable **PointersToHashtable;
 
@@ -24,12 +24,13 @@ void LSH(Cluster **cluster, int k, int N, string method, Hamming **hamming, Cosi
             {
                 for (int i = 0; i < L; i++)             //insert point into all hashtables
                 {
-                    g = hamming[j]->ConstructGFunction(NumofHashFUnctions);    //g function = concatenation of random h
+                    g = hamming[j]->ConstructGFunction(NumofHashFUnctions); 
+                    //cout << " i made it " << endl ; //g function = concatenation of random h
                     PointersToHashtable[i]->InsertIntoHashtable(g, hamming[j], NULL, NULL, NULL, -1); //Insert Hamming point into HasttableI
                }
             }
         }
-        QuerySearch(cluster, PointersToHashtable,  L, k,  method, N);
+        QuerySearch(cluster, PointersToHashtable,  L, k,  method, N, NumofHashFUnctions);
         PointersToHashtable[0]->ClusterAssign(cluster, method, k);
     }
     else if (method == "@metric euclidean")
@@ -44,7 +45,7 @@ void LSH(Cluster **cluster, int k, int N, string method, Hamming **hamming, Cosi
                 PointersToHashtable[i]->InsertIntoHashtable("", NULL, NULL, euclidean[j], NULL, fi);
             }
         }
-        QuerySearch(cluster, PointersToHashtable,  L, k,  method, N);
+        QuerySearch(cluster, PointersToHashtable,  L, k,  method, N, NumofHashFUnctions);
         PointersToHashtable[0]->ClusterAssign(cluster, method, k);
     }
     else if (method == "@metric cosine")
@@ -59,7 +60,7 @@ void LSH(Cluster **cluster, int k, int N, string method, Hamming **hamming, Cosi
                 PointersToHashtable[i]->InsertIntoHashtable(g, NULL, cosine[j], NULL, NULL, -1);    //Insert Cosine point into HashtableI
             }   
         }
-        QuerySearch(cluster, PointersToHashtable,  L, k,  method, N);
+        QuerySearch(cluster, PointersToHashtable,  L, k,  method, N, NumofHashFUnctions);
         PointersToHashtable[0]->ClusterAssign(cluster, method, k);
     }
     else
@@ -96,10 +97,10 @@ Hashtable ** CreateHash(int L, int k, int tablesize)
     return PointersToHashtable;
 }
 
-void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int k, string method, int counter)
+void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int k, string method, int counter, int NumofHashFUnctions)
 {
     string line, temp, temp1 = "cluster0", neighbour;
-    int min, dist, min_dist, radius, * row;
+    int min, dist, min_dist,  * row, radius;
     float distf = 0, min_distf;
     char *tmp;
     for(int i = 0; i < k; i++)
@@ -111,6 +112,7 @@ void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int 
             if (method == "@metric_space hamming")
             {
                 dist = DistanceHamming(cluster[j]->getCentroid(), cluster[i]->getCentroid());
+                //cout << dist << endl; 
                                              
             }                
             else if (method == "@metric euclidean")
@@ -130,13 +132,24 @@ void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int 
             if ((dist < min_dist && dist != 0) || (distf < min_distf && distf != 0))
             {
                 min_dist = dist;
+                cout << min_dist << "mindist" << endl;
                 min_distf = distf;
             }  
+            
         }
     }
 
-    if (min_distf == 100000.0) radius = min_dist / 2;
-    else radius = min_distf / 2;
+    if (method == "@metric_space hamming")
+    {radius = min_dist / 2;
+    cout << "yessss" << min_dist  << endl ; 
+    cout << "i made it 2" << endl ; }
+    else 
+    {   
+        cout << min_distf << endl ; 
+        radius = min_distf / 2;
+        
+    }
+    cout << radius << endl;
     ofstream outputFile("temp.txt");
     for(int z = 0; z < 5; z++)
     {
@@ -153,12 +166,13 @@ void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int 
                 if (method == "@metric_space matrix")
                 {
                     //DistanceMatrix *distancematrix = new DistanceMatrix(tmp1, counter, k);
-                    RangeNeighbourSearch(temp1, radius, PointersToHashtable[i], temp, k, L, method, counter, tmp, outputFile, neighbour, NULL, cluster, j);              
+                    RangeNeighbourSearch(temp1, radius, PointersToHashtable[i], temp, NumofHashFUnctions, L, method, counter, tmp, outputFile, neighbour, NULL, cluster, j);              
                 }
                 else
                 {
+                    cout << "bhka vre" << endl; 
                     // DistanceMatrix distancematrix(tmp1, counter, k);
-                    RangeNeighbourSearch(temp1, radius, PointersToHashtable[i], temp, k, L, method, counter, tmp, outputFile, neighbour, NULL, cluster, j);
+                    RangeNeighbourSearch(temp1, radius, PointersToHashtable[i], temp, NumofHashFUnctions, L, method, counter, tmp, outputFile, neighbour, NULL, cluster, j);
 
                 }
             }                                   

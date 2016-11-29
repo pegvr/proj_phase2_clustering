@@ -5,7 +5,6 @@ void CLARA(Cluster **cluster, int k, int N, string method, Hamming **hamming, Co
     int numb_of_it = 5;
     int n = 40 + 2*k , i, OF,  dist,  medoid[k], min_OF[k], min_k[k];
     float min_OFF[k], OFF, distf;
-
     for(int s = 0; s < numb_of_it; s++ )
     {
         for (i = 0; i < k; i++) objectivefunction[i] = 0;
@@ -176,6 +175,7 @@ void CLARA(Cluster **cluster, int k, int N, string method, Hamming **hamming, Co
                     {
 
                         if (method == "@metric_space hamming")
+                            
                             cluster[i]->UpdateCentroid(cluster[min_k[i]]->GetPointH(medoid[i])->getId());
                         else if (method == "@metric euclidean")
                             cluster[i]->UpdateCentroid(cluster[min_k[i]]->GetPointE(medoid[i])->getId());

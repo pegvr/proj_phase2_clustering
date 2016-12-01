@@ -87,29 +87,29 @@ all: main.o LinkedList.o Hashtable.o Hamming.o CosineSim.o Euclidean.o DistanceM
 main.o: main.cpp DataPoints.h
 	g++ -std=c++0x -c -g main.cpp
 
-LinkedList.o:../proj1.3/LinkedList.cpp ../proj1.3/LinkedList.h
-	g++ -std=c++0x -c -g ../proj1.3/LinkedList.cpp
+LinkedList.o: LinkedList.cpp LinkedList.h
+	g++ -std=c++0x -c -g LinkedList.cpp
 
-Hashtable.o: ../proj1.3/Hashtable.cpp ../proj1.3/LinkedList.h ../proj1.3/Hashtable.h
-	g++ -std=c++0x -c -g ../proj1.3/Hashtable.cpp 
+Hashtable.o: Hashtable.cpp LinkedList.h Hashtable.h
+	g++ -std=c++0x -c -g Hashtable.cpp 
 
-Hamming.o: ../proj1.3/Hamming.cpp ../proj1.3/Hamming.h
-	g++ -c -g ../proj1.3/Hamming.cpp
+Hamming.o: Hamming.cpp Hamming.h
+	g++ -c -g Hamming.cpp
 	
-CosineSim.o: ../proj1.3/CosineSim.cpp ../proj1.3/CosineSim.h ../proj1.3/randomfunc.h
-	g++ -std=c++0x -c -g ../proj1.3/CosineSim.cpp
+CosineSim.o: CosineSim.cpp CosineSim.h randomfunc.h
+	g++ -std=c++0x -c -g CosineSim.cpp
 	
-DistanceMatrix.o: ../proj1.3/DistanceMatrix.cpp ../proj1.3/DistanceMatrix.h
-	g++ -std=c++0x -c -g ../proj1.3/DistanceMatrix.cpp 
+DistanceMatrix.o: DistanceMatrix.cpp DistanceMatrix.h
+	g++ -std=c++0x -c -g DistanceMatrix.cpp 
 	
-Euclidean.o: ../proj1.3/Euclidean.cpp ../proj1.3/Euclidean.h
-	g++ -std=c++0x -c -g ../proj1.3/Euclidean.cpp
+Euclidean.o: Euclidean.cpp Euclidean.h
+	g++ -std=c++0x -c -g Euclidean.cpp
 	
-randomfunc.o: ../proj1.3/randomfunc.cpp ../proj1.3/randomfunc.h
-	g++ -c -g ../proj1.3/randomfunc.cpp
+randomfunc.o: randomfunc.cpp randomfunc.h
+	g++ -c -g randomfunc.cpp
 	
-NeighbourSearch.o: ../proj1.3/NeighbourSearch.cpp ../proj1.3/NeighbourSearch.h ../proj1.3/Hashtable.h 
-	g++ -std=c++0x -c -g ../proj1.3/NeighbourSearch.cpp
+NeighbourSearch.o: NeighbourSearch.cpp NeighbourSearch.h Hashtable.h 
+	g++ -std=c++0x -c -g NeighbourSearch.cpp
 	
 DataPoints.o: DataPoints.cpp DataPoints.h 
 	g++ -c -g DataPoints.cpp

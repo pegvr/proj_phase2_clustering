@@ -10,7 +10,7 @@
 #include <math.h>
 #include "Distances.h"
 #include "PAM.h"
-#include "../proj1.3/randomfunc.h"
+#include "randomfunc.h"
 
 void CLARA(Cluster **cluster, int k, int N, string method, Hamming **hamming, CosineSim **cosine,Euclidean **euclidean, DistanceMatrix *distance, int *objectivefunction, float * ObjectiveFunctionF);
 

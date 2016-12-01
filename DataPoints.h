@@ -4,10 +4,10 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "../proj1.3/Hamming.h"
-#include "../proj1.3/CosineSim.h"
-#include "../proj1.3/DistanceMatrix.h"
-#include "../proj1.3/Euclidean.h"
+#include "Hamming.h"
+#include "CosineSim.h"
+#include "DistanceMatrix.h"
+#include "Euclidean.h"
 
 using namespace std;
 

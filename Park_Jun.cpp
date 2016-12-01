@@ -5,6 +5,10 @@ void ParkJun(Cluster **cluster, int k, int N, string method, Hamming **hamming, 
     int i, j, t, dist, sum[N], sumt, matrix[N][N];
     float distf, matrixf[N][N], sumf[N], sumtf;
     
+    for(i = 0; i < N; i++) sum[i] = 0;
+    for(i = 0; i < N; i++) sumf[i] = 0;
+    /*For method compute 2-dimension matrix*/
+    
     /*For method compute 2-dimension matrix*/
     if (method == "@metric_space hamming")
     {

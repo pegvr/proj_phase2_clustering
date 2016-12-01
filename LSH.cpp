@@ -141,15 +141,16 @@ void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int 
 
     if (method == "@metric_space hamming")
     {radius = min_dist / 2;
-    cout << "yessss" << min_dist  << endl ; 
-    cout << "i made it 2" << endl ; }
+    //cout << "yessss" << min_dist  << endl ; 
+    //cout << "i made it 2" << endl ; 
+    }
     else 
-    {   
-        cout << min_distf << endl ; 
+    {  
+        //cout << min_distf << endl ; 
         radius = min_distf / 2;
         
     }
-    cout << radius << endl;
+    //cout << radius << endl;
     ofstream outputFile("temp.txt");
     for(int z = 0; z < 5; z++)
     {
@@ -170,7 +171,7 @@ void QuerySearch(Cluster **cluster, Hashtable **PointersToHashtable, int L, int 
                 }
                 else
                 {
-                    cout << "bhka vre" << endl; 
+                    //cout << "bhka vre" << endl; 
                     // DistanceMatrix distancematrix(tmp1, counter, k);
                     RangeNeighbourSearch(temp1, radius, PointersToHashtable[i], temp, NumofHashFUnctions, L, method, counter, tmp, outputFile, neighbour, NULL, cluster, j);
 

@@ -16,7 +16,7 @@
 #include <ctime>
 #include <math.h>
 #include "Distances.h"
-#include "../proj1.3/randomfunc.h"
+#include "randomfunc.h"
 #include "PAM.h"
 #include "LSH.h"
 
